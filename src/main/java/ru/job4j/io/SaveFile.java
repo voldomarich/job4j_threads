@@ -13,7 +13,7 @@ public final class SaveFile {
     }
 
     public void saveContent(String content) {
-        try (FileWriter fileWriter = new FileWriter(file.toString());
+        try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             bufferedWriter.write(content);
         } catch (IOException e) {
