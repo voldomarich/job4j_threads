@@ -6,19 +6,17 @@ public class ConsoleProgress implements Runnable {
     public void run() {
         char[] process = new char[] {'|', '/', '|', '\\', '-'};
         try {
-            int i = 0;
+            int index = 0;
             while (!Thread.currentThread().isInterrupted()) {
-                System.out.print("\r Загрузка: " + process[i]); /* выводим символ загрузки */
-                Thread.sleep(500);
-                i++;
-                if (i == process.length) {
-                    i = 0;
+                System.out.print("\r Загрузка: " + process[index++]); /* выводим символ загрузки */
+                if (index == process.length) {
+                    index = 0;
                 }
+                Thread.sleep(500);
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
-        System.out.println();
     }
 
     public static void main(String[] args) throws InterruptedException {
