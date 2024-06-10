@@ -3,7 +3,6 @@ package ru.job4j.cash;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AccountStorageTest {
 
@@ -53,27 +52,21 @@ public class AccountStorageTest {
         var storage = new AccountStorage();
         storage.add(new Account(1, 100));
         storage.add(new Account(2, 100));
-        Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> storage.transfer(1, 2, 110));
-        assertEquals("Баланс получателя меньше суммы перевода amount", exception.getMessage());
+        assertThat(storage.transfer(1, 2, 110)).isFalse();
     }
 
     @Test
-    void whenAccountDoesNotExistInTransfer1() {
+    void whenAccountDoesNotExistInTransfer() {
         var storage = new AccountStorage();
         storage.add(new Account(1, 100));
         storage.add(new Account(2, 100));
-        Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> storage.transfer(3, 5, 100));
-        assertEquals("Получателя либо отправителя нет в базе данных", exception.getMessage());
+        assertThat(storage.transfer(3, 5, 100)).isFalse();
     }
 
     @Test
     void whenAccountIsDuplicatedInTransfer() {
         var storage = new AccountStorage();
         storage.add(new Account(1, 100));
-        Throwable exception = assertThrows(IllegalArgumentException.class,
-                () -> storage.transfer(1, 1, 100));
-        assertEquals("Отправитель отправляет себе же", exception.getMessage());
+        assertThat(storage.transfer(1, 1, 100)).isFalse();
     }
 }
