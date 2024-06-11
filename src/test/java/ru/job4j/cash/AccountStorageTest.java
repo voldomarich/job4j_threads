@@ -56,6 +56,14 @@ public class AccountStorageTest {
     }
 
     @Test
+    void whenEnoughMoneyToTransfer() {
+        var storage = new AccountStorage();
+        storage.add(new Account(1, 100));
+        storage.add(new Account(2, 100));
+        assertThat(storage.transfer(1, 2, 99)).isTrue();
+    }
+
+    @Test
     void whenAccountDoesNotExistInTransfer() {
         var storage = new AccountStorage();
         storage.add(new Account(1, 100));

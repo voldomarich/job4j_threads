@@ -32,8 +32,11 @@ public class AccountStorage {
         var accountToId = getById(toId);
         boolean validation = fromId != toId && accountFromId.isPresent() && accountToId.isPresent()
                 && accountFromId.get().amount() >= amount;
-        boolean t1 = validation && update(new Account(fromId, accountFromId.get().amount() - amount));
-        boolean t2 = validation && update(new Account(toId, accountToId.get().amount() + amount));
-        return t1 && t2;
+        if (validation) {
+            update(new Account(fromId, accountFromId.get().amount() - amount));
+            update(new Account(toId, accountToId.get().amount() + amount));
+            return true;
+        }
+        return false;
     }
 }
