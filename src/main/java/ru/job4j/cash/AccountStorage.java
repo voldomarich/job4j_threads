@@ -28,11 +28,12 @@ public class AccountStorage {
     }
 
     public synchronized boolean transfer(int fromId, int toId, int amount) {
-        boolean validation =  getById(fromId).isPresent() && getById(toId).isPresent();
-        int amountToId = getById(toId).get().amount();
-        int amountFromId = getById(fromId).get().amount();
-        boolean t1 = update(new Account(toId, amountToId + amount));
-        boolean t2 = update(new Account(fromId, amountFromId - amount));
-        return validation && t1 && t2;
+        var accountFromId = getById(fromId);
+        var accountToId = getById(toId);
+        boolean validation = fromId != toId && accountFromId.isPresent() && accountToId.isPresent()
+                && accountFromId.get().amount() >= amount;
+        boolean t1 = validation && update(new Account(fromId, accountFromId.get().amount() - amount));
+        boolean t2 = validation && update(new Account(toId, accountToId.get().amount() + amount));
+        return t1 && t2;
     }
 }

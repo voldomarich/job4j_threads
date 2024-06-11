@@ -1,8 +1,8 @@
 package ru.job4j.cash;
 
 import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AccountStorageTest {
 
@@ -52,7 +52,7 @@ public class AccountStorageTest {
         var storage = new AccountStorage();
         storage.add(new Account(1, 100));
         storage.add(new Account(2, 100));
-        assertThat(storage.transfer(1, 2, 110)).isFalse();
+        assertThat(storage.transfer(1, 2, 101)).isFalse();
     }
 
     @Test
