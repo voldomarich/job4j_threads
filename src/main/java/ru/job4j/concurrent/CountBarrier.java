@@ -36,33 +36,35 @@ public class CountBarrier {
 
     public static void main(String[] args) {
         CountBarrier countBarrier = new CountBarrier(6);
-        Thread countCaller = new Thread(() -> {
-            for (int i = 0; i < 12; i++) {
-                countBarrier.count();
-                System.out.printf("Total=%s. Count=%s. i=%s. %s. %s  %n",
-                        countBarrier.total,
-                        countBarrier.count,
-                        i,
-                        Thread.currentThread().getName(),
-                        Thread.currentThread().getState());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }, "countCallerThread");
-
-        Thread afterCount = new Thread(() -> {
+        Thread first = new Thread(() -> {
             countBarrier.await();
-            System.out.printf("Total=%s. Count=%s.    %s. %s  %n",
+            System.out.printf("Total=%s. Count=%s. %s. %s  %n",
                     countBarrier.total,
                     countBarrier.count,
                     Thread.currentThread().getName(),
                     Thread.currentThread().getState());
-        }, "afterCountThread");
+        }, "first");
 
-        countCaller.start();
-        afterCount.start();
+        Thread second = new Thread(() -> {
+            for (int i = 0; i < 12; i++) {
+                countBarrier.count();
+                System.out.printf("Total=%s. Count=%s. i=%s. %s. %s. %s. %s %n",
+                        countBarrier.total,
+                        countBarrier.count,
+                        i,
+                        first.getName(),
+                        first.getState(),
+                        Thread.currentThread().getName(),
+                        Thread.currentThread().getState());
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, "second");
+
+        first.start();
+        second.start();
     }
 }
