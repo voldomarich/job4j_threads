@@ -2,10 +2,49 @@ package ru.job4j.concurrent;
 
 import org.junit.Test;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class SimpleBlockingQueueTest {
-    SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<Integer>(2);
+
+    final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
+    final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(14);
+
+    @Test
+    public void whenFetchAllThenGetIt() throws InterruptedException {
+
+        Thread producer = new Thread(
+                () -> {
+                    for (int i = 10; i < 14; i++) {
+                        try {
+                            queue.offer(i);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
+        producer.start();
+        Thread consumer = new Thread(
+                () -> {
+                    while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
+                        try {
+                            buffer.add(queue.poll());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+        );
+        consumer.start();
+        producer.join();
+        consumer.interrupt();
+        consumer.join();
+        assertThat(buffer).isNotEmpty();
+        assertThat(buffer).containsExactly(10, 11, 12, 13);
+    }
 
     @Test
     public void whenOffer() throws InterruptedException {

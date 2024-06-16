@@ -21,7 +21,7 @@ public class SimpleBlockingQueue<T> {
     public void offer(T value) throws InterruptedException {
         synchronized (queue) {
             while (queue.size() == capacity) {
-                queue.wait();       /* Ожидание, если размер очереди равен вмещающей способности объекта */
+                queue.wait();                   /* Ожидание, если размер очереди равен вмещающей способности объекта */
             }
             queue.add(value);       /* Добавление элемента в очередь */
             queue.notifyAll();      /* Перевод всех нитей в активное систояние RUNNABLE */
@@ -40,4 +40,8 @@ public class SimpleBlockingQueue<T> {
         }
         return result;
     }
+
+     public boolean isEmpty() {
+         return queue.isEmpty();
+     }
 }
