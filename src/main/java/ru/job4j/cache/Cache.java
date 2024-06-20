@@ -16,13 +16,9 @@ public class Cache {
     public boolean update(Base model) {
         return memory.computeIfPresent(model.id(), (key, currentCacheBase) -> {
                     if (currentCacheBase.version() != model.version()) {
-                        try {
-                            throw new OptimisticException("Версия кэша "
-                                    + "обновляемой модели не совпадает с версией кэша новой модели");
-                        } catch (OptimisticException e) {
-                            throw new RuntimeException(e);
+                        throw new OptimisticException("Версия кэша "
+                                + "обновляемой модели не совпадает с версией кэша новой модели");
                         }
-                    }
                     return new Base(key, model.name(), currentCacheBase.version() + 1);
                 }
         ) != null;
