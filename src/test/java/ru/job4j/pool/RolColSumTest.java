@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RolColSumTest {
-
     @Test
     public void matrixLengthIs3() {
         int[][] matrix = {new int[]{1,  2,  3},
